@@ -3,96 +3,135 @@ from PIL import Image
 import numpy as np
 import os
 
-class Pyimage():
-	def __init__(self, ):
+class Pyimage:
+	def __init__(self, dir='.'):
 		#select input images from current directory
 		self.image_extensions = [".jpg", ".png", ".bmp"]
-		self.images = []
-		self.dir = '.'
+		self.allimages = {}
+		self.outimages = {}
+		self.dir = dir
+		self.scanImages()
+
 		pass
 
-	def getImages(self, dir):
-		self.dir = dir
-		print "Scanning " + dir
+	#
+	def scanImages(self):
+		print "Scanning " + self.dir
 		images = {}
-		for i in os.listdir(dir):
+		for i in os.listdir(self.dir):
 			b, e = os.path.splitext(i)
 			if e.lower() not in self.image_extensions: continue
 			im = Image.open(os.path.join(self.dir, i))
 			images[i] = im
-		self.images = images
-		# print(self.images)
+		self.allimages = images
 	#
-	def cropImages(self, edge):
-		for image in self.images:
-			im = self.images[image]
-			pixels = np.asarray(im, dtype = 'uint8')
-			pos = [100000, 10000000, 0, 0]			
-			for i in range(edge[0], im.size[1] - edge[2]):
-				for j in range(edge[1], im.size[0] - edge[3]):
-					if sum(pixels[i][j]) > 0:
-						if j < pos[0]: pos[0] = j
-						if i < pos[1]: pos[1] = i
-						if j > pos[2]: pos[2] = j
-						if i > pos[3]: pos[3] = i
-			im = im.crop(pos)
-			self.images[image] = im
+	def showImages(self,):
+		for image in self.allimages:
+			print(image)
+		pass
+	#
+	def saveImages(self, dir='results'):
+		if not os.path.exists(dir):
+			os.makedirs(dir)
+		for key, image in self.outimages.items():
+			image.save(os.path.join(dir, key))
+		pass
+
+#
+class Merge(Pyimage):
+	'''
+	merge and add label
+	'''
+	def __init__(self, dir):
+		Pyimage.__init__(self, dir)
+		self.mode = 'bc'
+		self.sub = [2, 2]
+		self.pos = []
+		self.imagesize = [1000, 1000]
+
+		pass
+	#
+	def calcPosition(self, ):
+		# new image size
+		maxsize = [0, 0]
+		for i in range(self.sub[0]):
+			for image in self.arrage[i]:
+				size = self.allimages[image].size 
+				if size[0] > maxsize[0]: maxsize[0] = size[0]
+				if size[1] > maxsize[1]: maxsize[1] = size[1]
+		print(self.arrage)
+		self.imagesize[0] = maxsize[0]*self.sub[1] + self.sub[1]*self.interval[1]
+		self.imagesize[1] = maxsize[1]*self.sub[0] + self.sub[0]*self.interval[0]
+		#position of arrange
+		# bc
+		for i in range(self.sub[0]):
+			for j in range(self.sub[1]):
+				self.pos[i][j] = [i*maxsize[0] + i*self.interval[0],
+							j*maxsize[1] + i*self.interval[1]]
 		pass
 
 	#
 	def mergeImages(self, arrage, interval):
-		# calculate size
-		maxsize = [0, 0]
-		for i in range(len(arrage)):
-			for image in arrage[i]:
-				tmpsize = self.images[image].size 
-				if tmpsize[0] > maxsize[0]: maxsize[0] = tmpsize[0]
-				if tmpsize[1] > maxsize[1]: maxsize[1] = tmpsize[1]
-		size = [0, 0]
-		size[0] = len(arrage)
-		size[1] = len(arrage[0])
-		new_image = Image.new('RGB', (maxsize[0]*size[1], maxsize[1]*size[0]))
-		print(size, maxsize)
-		pos = [0, 0]
-		for i in range(size[0]):
-			for j in range(size[1]):
-				pos[0] = j*maxsize[0]
-				pos[1] = i*maxsize[1]
-				new_image.paste(self.images[arrage[i][j]], (pos[0], pos[1]))
-		self.new_image = new_image
-		self.output = 'output.png'
-		self.new_image.save(self.output)
+		self.arrage = arrage[:]
+		self.sub[0] = len(self.arrage)
+		self.sub[1] = len(self.arrage[0])
+		self.pos = arrage[:]  # the same size
+		self.interval = interval
+		self.calcPosition()
+		new_image = Image.new('RGB', self.imagesize)
+		for i in range(self.sub[0]):
+			for j in range(self.sub[1]):
+				print(self.pos[i][j])
+				print(self.arrage)
+				new_image.paste(self.allimages[arrage[i][j]], (self.pos[i][j][0], self.pos[i][j][1]))
+		self.outimages['merge'] = new_image
+	#
+	def addLabel(self, ):
+		pass
+
+#
+class Crop(Pyimage):
+	'''
+	crop a minimum box of the non-black or non-white regions in the image. 
+	'''
+	def __init__(self, dir):
+		Pyimage.__init__(self, dir)
+
+		self.edge = [0, 0, 0, 0]
 		pass
 	#
-	def showImages(self,):
-		for image in self.images:
-			print(image)
-		pass
+	def cropImages(self, images, edge, background = 'w'):
+		#
+		for image in images:
+			im = self.allimages[image]
+			size = im.size
+			box = [edge[0], edge[1], size[0] - edge[2], size[1] - edge[3]]
+			im = im.crop(box)
+			im.convert('RGB')
+			#
+			pixels = np.asarray(im, dtype = 'uint8')
+			pos = [100000, 10000000, 0, 0]
+			if background=='w' or background=='W':
+				for i in range(im.size[1]):
+					for j in range(im.size[0]):
+						if sum(pixels[i][j]) < 765:
+							if j < pos[0]: pos[0] = j
+							if i < pos[1]: pos[1] = i
+							if j > pos[2]: pos[2] = j
+							if i > pos[3]: pos[3] = i
+			elif background=='b' or background=='B':
+				for i in range(im.size[1]):
+					for j in range(im.size[0]):
+						if sum(pixels[i][j]) > 0:
+							if j < pos[0]: pos[0] = j
+							if i < pos[1]: pos[1] = i
+							if j > pos[2]: pos[2] = j
+							if i > pos[3]: pos[3] = i
+			im = im.crop(pos)
+			self.outimages[image] = im
+
 
 #--------------------------------
-pyim = Pyimage()
-pyim.getImages('/home/xing/xcp2k/surfaces/ceo2/111/relax/pto2')
-# pyim.showImages()
-
-jobs = {'t_e1_o':None ,
-        't_e1_o_pt': None ,
-        't_e1_ce': None ,
-        't_e1_ce_pt': None ,
-        's_e3_ce': None ,
-        's_e3_ce_pt': None ,}
-prefix = 'ceo2-111-pto2-'
-suffix = ['-top.png', '-side.png']
-arrage = [[ x for x in range(6)], [ x for x in range(6)]]
-# print(arrage)
-jobs.keys()[5]
-for i in range(2):
-	for j in range(6):
-		arrage[i][j] = prefix + jobs.keys()[j] + suffix[i]
-print(arrage)
-edge = [0, 0, 100, 0]
-pyim.cropImages(edge)
-interval = [0, 0]
-pyim.mergeImages(arrage, interval)
-# catIm = Image.open('/home/xing/xcp2k/surfaces/ceo2/111/relax/pto2/ceo2-111-pto2-s_e3_ce-top.png')
-# print(catIm.size)
-# catIm.show()
+if __name__=='__main__':
+	im = Pyimage()
+	pass
