@@ -26,12 +26,19 @@ A Python module for image processing: merge, crop.
 >>> pyim.mergeImages(arrage, interval)
 >>> pyim.saveImages()
 ```
-![Alt text](examples/merges/1.jpg?raw=true "Optional Title")
-![Alt text](examples/merges/2.jpg?raw=true "Optional Title")
-![Alt text](examples/merges/3.jpg?raw=true "Optional Title")
-![Alt text](examples/merges/4.jpg?raw=true "Optional Title")
-merge images [1.jpg, 2.jpg, 3.jpg, 4.jpg] to one image.
-![Alt text](examples/merges/merge.jpg?raw=true "Optional Title")
+<img src="examples/merge/1.jpg" align="left" />
+<img src="examples/merge/2.jpg" align="left" />
+<img src="examples/merge/3.jpg" align="left" />
+<img src="examples/merge/4.jpg" align="left" />
+<img src="examples/merge/5.jpg" align="left" />
+<img src="examples/merge/6.jpg" align="left" />
+
+merge images above 6 images to one image. The positions of each image is determined by the arrange list.
+[['1.jpg', '3.jpg', '5.jpg'], 
+ ['2.jpg', '4.jpg', '6.jpg']]
+
+<img src="examples/merge/results/merge.jpg" align="left" />
+
 
 If you want to add features/improvement or report issues, feel free to send a pull request!
 
