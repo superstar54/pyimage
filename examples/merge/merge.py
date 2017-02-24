@@ -10,8 +10,8 @@ line
 4.jpg & 5.jpg & 6.jpg \\
 line
 '''
-arrage = [['1.jpg', '2.jpg', '3.jpg'], 
-          ['4.jpg', '5.jpg', '6.jpg']]
-interval = [5, 5]
+arrage = [['1.jpg', '3.jpg', '5.jpg'], 
+          ['2.jpg', '4.jpg', '6.jpg']]
+interval = [15, 15]
 pyim.mergeImages(arrage, interval, mode='bc')
 pyim.saveImages()

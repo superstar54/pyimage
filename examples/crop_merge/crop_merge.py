@@ -19,7 +19,7 @@ arrage = [['s_o_1.png', 's_pt_1.png', 't_o_1.png', 'to_o_1.png', 'to_pt_1.png', 
           ['s_o_2.png', 's_pt_2.png', 't_o_2.png', 'to_o_2.png', 'to_pt_2.png', 't_pt_2.png']]
 interval = [200, 100]
 # mode, bc: bottom, center; 
-merge.mergeImages(arrage, interval, mode='bc', background = 'w')
+merge.mergeImages(arrage, interval, mode='bc', background = 'b')
 font = ImageFont.truetype(
 		"/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans-Bold.ttf",80)
 merge.addLabel('a', font)

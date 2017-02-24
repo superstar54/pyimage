@@ -11,9 +11,9 @@ font2 = ImageFont.truetype(
 	"/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans-Bold.ttf",10)
 #merge
 for i in range(1, 7):
-	img = Image.new('RGB', [100 + i*10, 100], (255, 255, 255))
+	img = Image.new('RGB', [100, 100 + i*10], (255/i, 255/(7-i), 255))
 	draw = ImageDraw.Draw(img)
-	draw.text((25 + i*5, 25),"{0}".format(i),(120,20,20), font = font1)
+	draw.text((25 , 25),"{0}".format(i),(120,20,20), font = font1)
 	img.save('{0}.jpg'.format(i))
 	os.system('mv {0}.jpg merge'.format(i))
 

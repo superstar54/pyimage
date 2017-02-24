@@ -22,7 +22,7 @@ A Python module for image processing: merge, crop.
 >>> pyim.scanImages()
 >>> arrage = [['1.jpg', '3.jpg', '5.jpg'], 
 ...           ['2.jpg', '4.jpg', '6.jpg']]
->>> interval = [5, 5]
+>>> interval = [15, 15]
 >>> pyim.mergeImages(arrage, interval)
 >>> pyim.saveImages()
 ```
