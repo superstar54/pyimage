@@ -2,6 +2,7 @@
 from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
+import random
 import os
 
 
@@ -11,7 +12,7 @@ font2 = ImageFont.truetype(
 	"/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans-Bold.ttf",10)
 #merge
 for i in range(1, 7):
-	img = Image.new('RGB', [100, 100 + i*10], (255/i, 255/(7-i), 255))
+	img = Image.new('RGB', [100, 100 + random.randint(1, 50)], (255/i, 255/(7-i), 255))
 	draw = ImageDraw.Draw(img)
 	draw.text((25 , 25),"{0}".format(i),(120,20,20), font = font1)
 	img.save('{0}.jpg'.format(i))
