@@ -13,5 +13,9 @@ line
 arrage = [['1.jpg', '3.jpg', '5.jpg'], 
           ['2.jpg', '4.jpg', '6.jpg']]
 interval = [15, 15]
-pyim.mergeImages(arrage, interval, mode='bc')
+
+# edge: top, bottom, left, right
+edge = [10, 10, 5, 5]
+pyim.mergeImages(arrage, interval, edge, mode='bc')
+pyim.addLabels('1)', fontsize=20, fill='white')
 pyim.saveImages()

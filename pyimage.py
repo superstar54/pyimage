@@ -64,8 +64,8 @@ class Merge(Pyimage):
 				if size[1] > maxsize[1]: maxsize[1] = size[1]
 		# print(self.arrange)
 		self.maxsize = maxsize
-		self.imagesize[0] = maxsize[0]*sub[1] + sub[1]*self.interval[1]
-		self.imagesize[1] = maxsize[1]*sub[0] + sub[0]*self.interval[0]
+		self.imagesize[0] = maxsize[0]*sub[1] + (sub[1] - 1)*self.interval[1] + self.edge[2] + self.edge[3]
+		self.imagesize[1] = maxsize[1]*sub[0] + (sub[0] - 1)*self.interval[0] + self.edge[0] + self.edge[1]
 		#position of arrange
 		print(sub)
 		for i in range(sub[0]):
@@ -100,11 +100,12 @@ class Merge(Pyimage):
 		pass
 
 	#
-	def mergeImages(self, arrange, interval, mode = 'bc', background = 'w'):
+	def mergeImages(self, arrange, interval, edge = [0, 0, 0, 0], mode = 'bc', background = 'w'):
 		self.arrange = arrange[:]
 		self.sub[0] = len(self.arrange)
 		self.sub[1] = len(self.arrange[0])
 		self.interval = interval
+		self.edge = edge
 		self.mode = mode
 		for mode in self.modes:
 			self.pos[mode] = [[0 for x in range(self.sub[1])] for y in range(self.sub[0])] 
@@ -118,12 +119,16 @@ class Merge(Pyimage):
 		pos = self.pos[self.mode]
 		for i in range(self.sub[0]):
 			for j in range(self.sub[1]):
-				new_image.paste(self.allimages[arrange[i][j]], (pos[i][j][0], pos[i][j][1]))
+				new_image.paste(self.allimages[arrange[i][j]], (self.edge[2] + pos[i][j][0], self.edge[0] + pos[i][j][1]))
+
 		self.outimages['merge.jpg'] = new_image
 	#
-	def addLabel(self, label, font):
+	def addLabels(self, label, fontsize='20', fill = (0, 0, 0)):
 		from PIL import ImageFont
 		from PIL import ImageDraw
+		font = ImageFont.truetype(
+		"/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans-Bold.ttf",fontsize)
+
 		img = self.outimages['merge.jpg']
 		draw = ImageDraw.Draw(img)
 		pos = [0, 0]
@@ -138,9 +143,9 @@ class Merge(Pyimage):
 			k = ord(label[1])
 		for i in range(self.sub[0]):
 			for j in range(self.sub[1]):
-				pos = [j*self.maxsize[0] + j*self.interval[1],
-							i*self.maxsize[1] + i*self.interval[0]]
-				draw.text(pos,"({0})".format(chr(k)),(0, 0, 0), font = font)
+				pos = [j*self.maxsize[0] + j*self.interval[1] + self.edge[2],
+							i*self.maxsize[1] + i*self.interval[0] + self.edge[0]]
+				draw.text(pos,"({0})".format(chr(k)), fill = fill, font = font)
 				k += 1
 		pass
 
