@@ -33,7 +33,7 @@ A Python module for image processing: merge, crop.
 <img src="examples/merge/5.jpg"/>
 <img src="examples/merge/6.jpg"/>
 
-merge images above 6 images to one image. The positions of each image is determined by the arrange list.
+merge above 6 images to one image and add labels. The positions of each image is determined by the arrange list.
 
 [['1.jpg', '3.jpg', '5.jpg'], 
 
