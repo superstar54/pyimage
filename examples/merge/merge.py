@@ -1,4 +1,4 @@
-#!/urs/bin/evn python
+#!/usr/bin/env python
 from pyimage import Merge
 pyim = Merge(dir = '.')
 pyim.scanImages()

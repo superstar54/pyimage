@@ -1,4 +1,4 @@
-#!/urs/bin/evn python
+#!/usr/bin/env python
 from pyimage import Crop
 from pyimage import Merge
 from PIL import ImageFont

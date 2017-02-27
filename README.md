@@ -14,8 +14,9 @@ A Python module for image processing: merge, crop.
 * PIL
 
 
-####Examples
+###Examples
 
+####Merge
 ```python
 >>> from pyimage import Merge
 >>> pyim = Merge(dir = '.')
@@ -40,6 +41,27 @@ merge above 6 images to one image and add labels. The positions of each image is
  ['2.jpg', '4.jpg', '6.jpg']]
 
 <img src="examples/merge/results/merge.jpg"/>
+
+####Crop
+```python
+>>> from pyimage import Crop
+>>> pyim = Crop('.')
+>>> images = ['1.jpg']
+>>> edge = [50, 50, 50, 50]
+>>> pyim.cropImages(images, edge, 'w')
+>>> pyim.saveImages()
+```
+<img src="examples/crop/1.jpg"/>
+
+
+crop a minimum box of the non-black or non-white regions in the above image. 
+
+[['1.jpg', '3.jpg', '5.jpg'], 
+
+ ['2.jpg', '4.jpg', '6.jpg']]
+
+<img src="examples/crop/results/1.jpg"/>
+
 
 
 If you want to add features/improvement or report issues, feel free to send a pull request!
