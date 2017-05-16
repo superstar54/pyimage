@@ -1,22 +1,22 @@
-###pyliterature
+### pyliterature
 A Python module for image processing: merge, crop.
 
 
 
-###Author
+### Author
 * Xing Wang  <xingwang1991@gmail.com>
 
 
 
-###Dependencies
+### Dependencies
 
 * Python >=27
 * PIL
 
 
-###Examples
+### Examples
 
-####Merge
+#### Merge
 ```python
 >>> from pyimage import Merge
 >>> pyim = Merge(dir = '.')
@@ -42,7 +42,7 @@ merge above 6 images to one image and add labels. The positions of each image is
 
 <img src="examples/merge/results/merge.jpg"/>
 
-####Crop
+#### Crop
 ```python
 >>> from pyimage import Crop
 >>> pyim = Crop('.')
@@ -67,5 +67,5 @@ crop a minimum box of the non-black or non-white regions in the above image.
 If you want to add features/improvement or report issues, feel free to send a pull request!
 
 
-###TODO
+### TODO
 * add label
